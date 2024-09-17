@@ -2,16 +2,20 @@ const getDashData = (users) => {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    const activeUsers = users.filter(
-        user => user.posts.some(
-            post => new Date(post.timestamp) >= oneWeekAgo));
+    // Active Users
+    const activeUsers = users.filter(user => 
+        user.posts.some(post => new Date(post.timestamp) >= oneWeekAgo)
+    );
 
-    const popularPosts = activeUsers.map(
-        user => user.posts.filter(
-            post => post.likes.length > 10)).flat();
+    // Popular Posts
+    const popularPosts = activeUsers.map(user => 
+        user.posts.filter(post => post.likes >= 10)
+    ).flat();
 
+    // Total Likes
     const totalLikes = popularPosts.reduce((acc, post) => acc + post.likes, 0);
 
+    // Average Likes per User
     const averageLikesPerUser = activeUsers.length ? totalLikes / activeUsers.length : 0;
 
     return {
@@ -19,7 +23,6 @@ const getDashData = (users) => {
         PopularPosts: popularPosts.length,
         AverageLikesPerUser: averageLikesPerUser
     };
-
 }
 
 const users = [
@@ -29,9 +32,9 @@ const users = [
         location: "New York",
         friends: [2, 3, 4],
         posts: [
-            { content: "Great day at Central Park!", timestamp: "2024-05-10T12:00:00", likes: 15 },
-            { content: "Loving the vibes in NYC!", timestamp: "2024-05-15T08:30:00", likes: 8 },
-            { content: "Visited the Statue of Liberty today!", timestamp: "2024-05-05T17:45:00", likes: 20 }
+            { content: "Great day at Central Park!", timestamp: "2024-09-10T12:00:00", likes: 15 },
+            { content: "Loving the vibes in NYC!", timestamp: "2024-09-15T08:30:00", likes: 8 },
+            { content: "Visited the Statue of Liberty today!", timestamp: "2024-09-05T17:45:00", likes: 20 }
         ]
     },
     {
@@ -40,8 +43,8 @@ const users = [
         location: "San Francisco",
         friends: [1, 3],
         posts: [
-            { content: "Hiking in the Bay Area!", timestamp: "2024-05-12T14:20:00", likes: 12 },
-            { content: "Enjoying the sunny weather!", timestamp: "2024-05-14T11:10:00", likes: 6 }
+            { content: "Hiking in the Bay Area!", timestamp: "2024-09-12T14:20:00", likes: 12 },
+            { content: "Enjoying the sunny weather!", timestamp: "2024-09-14T11:10:00", likes: 6 }
         ]
     },
     {
@@ -50,8 +53,8 @@ const users = [
         location: "Los Angeles",
         friends: [1, 2, 4],
         posts: [
-            { content: "Beach day in LA!", timestamp: "2024-05-08T09:45:00", likes: 25 },
-            { content: "Exploring Hollywood!", timestamp: "2024-05-16T16:55:00", likes: 5 }
+            { content: "Beach day in LA!", timestamp: "2024-09-08T09:45:00", likes: 25 },
+            { content: "Exploring Hollywood!", timestamp: "2024-09-16T16:55:00", likes: 5 }
         ]
     },
     {
@@ -60,8 +63,8 @@ const users = [
         location: "Chicago",
         friends: [2],
         posts: [
-            { content: "Deep dish pizza is the best!", timestamp: "2024-05-11T10:30:00", likes: 18 },
-            { content: "Trying out a new jazz club tonight!", timestamp: "2024-05-13T20:00:00", likes: 3 }
+            { content: "Deep dish pizza is the best!", timestamp: "2024-09-11T10:30:00", likes: 18 },
+            { content: "Trying out a new jazz club tonight!", timestamp: "2024-09-13T20:00:00", likes: 3 }
         ]
     },
     {
@@ -70,8 +73,8 @@ const users = [
         location: "Seattle",
         friends: [3, 1],
         posts: [
-            { content: "Coffee time in the Pacific Northwest!", timestamp: "2024-05-09T15:15:00", likes: 9 },
-            { content: "Exploring the Olympic National Park!", timestamp: "2024-05-14T07:00:00", likes: 11 }
+            { content: "Coffee time in the Pacific Northwest!", timestamp: "2024-09-09T15:15:00", likes: 9 },
+            { content: "Exploring the Olympic National Park!", timestamp: "2024-09-14T07:00:00", likes: 11 }
         ]
     }
 ];
