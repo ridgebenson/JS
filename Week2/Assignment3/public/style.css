@@ -1,0 +1,81 @@
+/* body{
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* flex-direction: column; */
+
+
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* border: 1px solid black; */
+}
+
+.filtr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    width: auto;
+    
+    /* border: 1px solid black; */
+}
+
+.btn{
+    background-color: #157dc2;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#container{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    
+    /* border: 1px solid black; */
+}
+
+.event{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 10px;
+    width:20vw;
+}
+
+.event-image{
+    width: 100%;
+    border-radius: 10px;
+    height: 50vh;
+}
+
+.buy-button{
+    background-color: #157dc2;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    /* border-radius: 10px; */
+    padding: 10px;
+}
+
+h2, p{
+    text-align: center;
+}
