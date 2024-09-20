@@ -1,350 +1,118 @@
 document.addEventListener('DOMContentLoaded', () => {
     const events = document.getElementById('container');
+    const sortByDateRecent = document.getElementById('datE');
+    const sortByDateOldest = document.getElementById('date');
+    const sortByPriceHigh = document.getElementById('pricE');
+    const sortByPriceLow = document.getElementById('price');
+    const sortByLocationAsc = document.getElementById('locatioN');
+    const sortByLocationDesc = document.getElementById('location');
 
-    
-    try {
-        
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
+    let eventData = [];
 
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
+    const renderEvents = (data) => {
+        events.innerHTML = '';
+        data.map(event => {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event';
 
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
+            const img = document.createElement('img');
+            img.src = event.imageUrl;
+            img.className = 'event-image';
 
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
+            const eventTitle = document.createElement('h2');
+            eventTitle.textContent = event.title;
 
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
+            const eventPrice = document.createElement('p');
+            eventPrice.textContent = `$${event.price}`;
 
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
+            const eventDate = document.createElement('p');
+            eventDate.textContent = event.date;
 
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
+            const eventLocation = document.createElement('p');
+            eventLocation.textContent = event.location;
 
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
+            const eventCompany = document.createElement('p');
+            eventCompany.textContent = event.company;
 
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
+            const buyEvent = document.createElement('button');
+            buyEvent.textContent = 'Buy Ticket';
+            buyEvent.className = 'buy-button';
 
-
-            });
+            events.appendChild(eventDiv);
+            eventDiv.append(img);
+            eventDiv.append(eventTitle);
+            eventDiv.append(eventPrice);
+            eventDiv.append(eventDate);
+            eventDiv.append(eventDate);
+            eventDiv.append(eventLocation);
+            eventDiv.append(eventCompany);
+            eventDiv.append(buyEvent);
         });
+    };
 
+    const sortByDate = (data, order = 'recent') => {
+        return data.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return order === 'recent' ? dateB - dateA : dateA - dateB;
+        });
+    };
+
+    const sortByPrice = (data, order = 'high') => {
+        return data.sort((a, b) => {
+            return order === 'high' ? b.price - a.price : a.price - b.price;
+        });
+    };
+
+    const sortByLocation = (data, order = 'asc') => {
+        return data.sort((a, b) => {
+            if (order === 'asc') {
+                return a.location.localeCompare(b.location);
+            } else {
+                return b.location.localeCompare(a.location);
+            }
+        });
+    };
+
+    try {
+        fetch('../data.json')
+            .then(response => response.json())
+            .then(data => {
+                eventData = data;
+                renderEvents(eventData);
+            })
+            .catch(error => console.error('Error fetching data:', error));
     } catch (error) {
-        
+        console.error('Error:', error);
     }
 
-    const filterByDateRecent = document.getElementById('datE');
-    const filterByDateoldest = document.getElementById('date');
-    const filterByPriceHigh = document.getElementById('pricE');
-    const filterByPriceLow = document.getElementById('price');
-    const filterByLocationAsc = document.getElementById('locatioN');
-    const filterByLocationDesc = document.getElementById('location');
-    
-    const faVourites = document.getElementById('favE');
-
-    filterByDateRecent.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
-            });
-        });
+    sortByDateRecent.addEventListener('click', () => {
+        const sortedData = sortByDate(eventData, 'recent');
+        renderEvents(sortedData);
     });
 
-    filterByDateoldest.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
-            });
-        });
+    sortByDateOldest.addEventListener('click', () => {
+        const sortedData = sortByDate(eventData, 'oldest');
+        renderEvents(sortedData);
     });
 
-    filterByLocationAsc.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => a.location.localeCompare(b.location));
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
-            });
-        });
+    sortByPriceHigh.addEventListener('click', () => {
+        const sortedData = sortByPrice(eventData, 'high');
+        renderEvents(sortedData);
     });
 
-    filterByLocationDesc.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => b.location.localeCompare(a.location));
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                const add2Fave = document.createElement('button');
-                add2Fave.textContent = 'Add to Favourites';
-                add2Fave.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.appendChild(img);
-                eventDiv.appendChild(eventTitle);
-                eventDiv.appendChild(eventPrice);
-                eventDiv.appendChild(eventDate);
-                eventDiv.appendChild(eventDate);
-                eventDiv.appendChild(eventLocation);
-                eventDiv.appendChild(eventCompany);
-                eventDiv.appendChild(buyEvent);
-                eventDiv.appendChild(add2Fave);
-            });
-        });
+    sortByPriceLow.addEventListener('click', () => {
+        const sortedData = sortByPrice(eventData, 'low');
+        renderEvents(sortedData);
     });
 
-    filterByPriceHigh.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => b.price - a.price);
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
-            });
-        });
+    sortByLocationAsc.addEventListener('click', () => {
+        const sortedData = sortByLocation(eventData, 'asc');
+        renderEvents(sortedData);
     });
 
-    filterByPriceLow.addEventListener('click', () => {
-        events.innerHTML = '';
-        fetch('../data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => a.price - b.price);
-            data.map(event => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'event';
-
-                const img = document.createElement('img');
-                img.src = event.imageUrl;
-                img.className = 'event-image';
-
-                const eventTitle = document.createElement('h2');
-                eventTitle.textContent = event.title;
-
-                const eventPrice = document.createElement('p');
-                eventPrice.textContent = event.price;
-
-                const eventDate = document.createElement('p');
-                eventDate.textContent = event.date;
-
-                const eventLocation = document.createElement('p');
-                eventLocation.textContent = event.location;
-
-                const eventCompany = document.createElement('p');
-                eventCompany.textContent=event.company;
-
-                const buyEvent = document.createElement('button');
-                buyEvent.textContent = 'Buy Now';
-                buyEvent.className = 'buy-button';
-
-                const add2Fave = document.createElement('button');
-                add2Fave.textContent = 'Add to Favourites';
-                add2Fave.className = 'buy-button';
-
-                events.appendChild(eventDiv);
-                eventDiv.append(img);
-                eventDiv.append(eventTitle);
-                eventDiv.append(eventPrice);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventDate);
-                eventDiv.append(eventLocation);
-                eventDiv.append(eventCompany);
-                eventDiv.append(buyEvent);
-                eventDiv.append(add2Fave);
-            });
-        });
+    sortByLocationDesc.addEventListener('click', () => {
+        const sortedData = sortByLocation(eventData, 'desc');
+        renderEvents(sortedData);
     });
-
 });
