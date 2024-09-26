@@ -2,6 +2,7 @@ import { it, expect } from 'vitest';
 import { handleFormData } from './exercises';
 import { concatName } from './exercises';
 import { concatName4 } from './exercises';
+import { calculateArea3 } from './exercises';
 import { Expect, Equal } from "@total-typescript/helpers";
 
 it("Should handle a form submit", () => {
@@ -50,3 +51,16 @@ it("should return the first name with default last name", () => {
 
     expect(result).toEqual("John Pocock");
 }); //Fails
+
+
+it('Should calculate the area of a circle when no kind is passed', () => {
+    const result = calculateArea3({
+        //   Argument of type '{ radius: number; }' is not assignable to parameter of type 'Shape'.
+        // Property 'kind' is missing in type '{ radius: number; }' but required in type 'Circle'.
+        radius: 5,
+    })
+
+    expect(result).toBe(78.53981633974483)
+
+    type test = Expect<Equal<typeof result, number>>
+})

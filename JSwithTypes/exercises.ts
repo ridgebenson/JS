@@ -170,6 +170,115 @@ async function fetchData() {
 const example = async () => {
     const data: number = await fetchData();
 
-    
+
     type test = Expect<Equal<typeof data, number>>;
 };
+
+
+// Unions, Literals, and Narrowing
+// 1. Destructuring a Discriminated Union
+
+type Circle = {
+    kind: "circle";
+    radius: number;
+}
+
+type Square = {
+    kind: "square";
+    sideLength: number;
+}
+
+type Shape = Circle | Square;
+
+function calculateArea(shape: Shape) {
+
+    if (shape.kind === "circle") {
+        return Math.PI * shape.radius ** 2;
+    } else {
+        return shape.sideLength ** 2;
+    }
+}
+
+// 2. Narrowing a Discriminated Union with a Switch Statement
+
+function calculateArea2(shape: Shape) {
+    switch (shape.kind) {
+        case "circle":
+            return Math.PI * shape.radius ** 2;
+        case "square":
+            return shape.sideLength ** 2;
+    }
+}
+
+// 3. Discriminated Tuples
+
+type User2 = {
+    id: number;
+    name: string;
+    email: string;
+};
+
+type APIResponse =
+    | ["error", string]
+    | ["success", User2[]];
+
+
+async function fetchData2(): Promise<APIResponse> {
+    try {
+        const response = await fetch('https://api.example.com/data')
+
+        if (!response.ok) {
+            return [
+
+                'error',
+                // Imagine some improved error handling here
+                'An error occurred',
+            ]
+        }
+
+        const data = await response.json()
+
+        return ['success', data]
+    } catch (error) {
+        return ['error', 'An error occurred']
+    }
+}
+
+async function exampleFunc() {
+    const [status, value] = await fetchData2()
+
+    if (status === 'success') {
+        console.log(value)
+
+        type test = Expect<Equal<typeof value, User2[]>>
+        //   Type 'false' does not satisfy the constraint 'true'.
+    } else {
+        console.error(value)
+
+        type test = Expect<Equal<typeof value, string>>
+        //   Type 'false' does not satisfy the constraint 'true'.
+    }
+}
+
+// 4. Handling Defaults with a Discriminated Union
+
+type Circle2 = {
+    // kind: "circle";
+    radius: number;
+}
+
+type Square2 = {
+    // kind: "square";
+    sideLength: number;
+}
+
+type Shape2 = Circle2 | Square2;
+
+
+export function calculateArea3(shape2: Shape2) {
+    if ('radius' in shape2) {
+        return Math.PI * shape2.radius * shape2.radius
+    } else {
+        return shape2.sideLength * shape2.sideLength
+    }
+}
