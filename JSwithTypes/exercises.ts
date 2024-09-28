@@ -79,21 +79,13 @@ const result5 = concatName3("John");
 
 
 // 2. Default Function Parameters
-export const concatName4 = (firST: string, laST: string = "Pocock"): string => {
+export const concatName4 = (firST: string, laST: string = "Pocock") => {
     if (!laST) {
         return firST;
     }
     return `${firST} ${laST}`;
 };
 
-
-// export const concatName4 = (firST: string, laST: string= "Pocock"):string => {
-//     if (!laST) {
-//         return firST;
-//     }
-
-//     return `${firST} ${laST}`;
-// };
 
 // 3. Rest Parameters
 export function concatenate(...strings: string[]) {
@@ -282,3 +274,89 @@ export function calculateArea3(shape2: Shape2) {
         return shape2.sideLength * shape2.sideLength
     }
 }
+
+// Objects
+// Extending Objects
+// 1. Create an Intersection Type
+type BaseEntity = {
+    id: string;
+    createdAt: Date;
+};
+
+type User3 = BaseEntity & {
+    name: string;
+    email: string;
+};
+
+type Product = BaseEntity & {
+    name: string;
+    price: number;
+};
+
+
+// 2. Extending Interfaces
+interface BaseEntity2 {
+    id: string;
+    createdAt: Date;
+}
+
+interface User4 extends BaseEntity2 {
+    name: string;
+    email: string;
+}
+
+interface Product2 extends BaseEntity2 {
+    name: string;
+    price: number;
+}
+
+// Reducing Duplication with Utility Types
+// 1. Expecting Certain Properties
+
+interface User5 {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+};
+
+type UserWithoutRoleAndId = Omit<User5, "role" | "id">;
+
+const fetchUser = async (): Promise<UserWithoutRoleAndId> => {
+    const response = await fetch("/api/user");
+    const user2 = await response.json();
+    return user2;
+};
+
+const example6 = async () => {
+    const user = await fetchUser();
+
+    type test = Expect<Equal<typeof user, { name: string; email: string }>>;
+    //   Type 'false' does not satisfy the constraint 'true'.
+};
+
+// 2. Updating a Product
+interface Product3 {
+    id: number;
+    name: string;
+    price: number;
+    description: string;
+}
+
+type UpdateProduct = Partial<Omit<Product3, "id">>;
+
+const updateProduct = (id: number, productInfo: UpdateProduct) => {
+    // Do something with the productInfo
+};
+
+updateProduct(1, {
+    // Argument of type '{ name: string; }' is not assignable to parameter of type 'Product'.
+    //   Type '{ name: string; }' is missing the following properties from type 'Product': id, price, description
+    name: "Book",
+});
+
+updateProduct(1, {
+    // Argument of type '{ price: number; }' is not assignable to parameter of type 'Product'.
+    //   Type '{ price: number; }' is missing the following properties from type 'Product': id, name, description
+    price: 12.99,
+});

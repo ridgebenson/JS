@@ -1,8 +1,8 @@
 import { it, expect } from 'vitest';
 import { handleFormData } from './exercises';
 import { concatName } from './exercises';
-import { concatName4 } from './exercises';
-import { calculateArea3 } from './exercises';
+import { concatName4 }  from './exercises';
+import  { calculateArea3 }  from './exercises';
 import { Expect, Equal } from "@total-typescript/helpers";
 
 it("Should handle a form submit", () => {
